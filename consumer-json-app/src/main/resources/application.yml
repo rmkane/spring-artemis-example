@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: consumer-json
+  artemis:
+    mode: native
+    broker-url: ${ARTEMIS_BROKER_URL:tcp://127.0.0.1:61616}
+    user: ${ARTEMIS_USER:artemis}
+    password: ${ARTEMIS_PASSWORD:artemis}
+  jms:
+    pub-sub-domain: true
+    # Durable subscribers need connection.setClientID; Spring's default CachingConnectionFactory shared proxy
+    # rejects that call — disable the cache so the broker ConnectionFactory is used directly.
+    cache:
+      enabled: false
+    # Required for durable topic subscriptions (messages kept while this app is offline after first subscribe).
+    client-id: consumer-json-app
+    subscription-durable: true
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  jms:
+    topic: app.messages.json
+    dlq: app.messages.json.DLQ
+    listener-id: consumer-json
+    durable-subscription: consumer-json-messages
+    # JMS pattern examples (see README): queue, non-durable topic, durable topic (listeners auto-start).
+    demo:
+      queue: app.demo.pp.queue
+      topic: app.demo.pubsub.topic
+      durable-topic: app.demo.durable.topic
+      durable-subscription: consumer-json-demo-patterns
+      # Must differ from spring.jms.client-id: only one active JMS connection may use a given client id.
+      durable-client-id: consumer-json-demo-durable
+    retry:
+      max-attempts: 3
+      initial-interval-ms: 200
+      multiplier: 2.0
+
+logging:
+  level:
+    root: INFO
+    org.acme.parse: INFO

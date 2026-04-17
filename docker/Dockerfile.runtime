@@ -1,0 +1,19 @@
+# syntax=docker/dockerfile:1
+#
+# JVM-only runtime image: no Maven, no framework SDKs, no application code.
+# Any process that ships as a single executable JAR can use this layer: copy the JAR to
+# /app/application.jar (see ../Dockerfile final stage). Not Java-version-specific beyond 21.
+#
+# Uses distroless (Debian glibc, non-root): minimal userspace around the JVM — not a
+# general-purpose OS image with shells and package managers.
+#
+# Build:  docker build -f docker/Dockerfile.runtime -t parse/jvm-runtime:21 .
+
+FROM gcr.io/distroless/java21-debian12:nonroot
+
+WORKDIR /app
+
+EXPOSE 8080
+
+# Distroless Java: image entrypoint is `java`; CMD supplies the jar path.
+CMD ["/app/application.jar"]
