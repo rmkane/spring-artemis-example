@@ -1,0 +1,10 @@
+services:
+  artemis:
+    image: apache/activemq-artemis:2.37.0
+    container_name: artemis
+    ports:
+      - "61616:61616" # JMS / CORE
+      - "8161:8161" # Web console (http://localhost:8161)
+    environment:
+      ARTEMIS_USER: artemis
+      ARTEMIS_PASSWORD: artemis
