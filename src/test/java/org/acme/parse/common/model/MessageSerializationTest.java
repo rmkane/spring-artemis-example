@@ -1,4 +1,4 @@
-package org.acme.parse.model;
+package org.acme.parse.common.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
-import org.acme.parse.service.MessageService;
-import org.acme.parse.service.impl.MessageServiceImpl;
+import org.acme.parse.common.service.MessageService;
+import org.acme.parse.common.service.impl.MessageServiceImpl;
 
 /**
  * Asserts on parsed trees ({@link JsonNode}), not unmarshalling back into the original POJO.
@@ -21,7 +21,7 @@ class MessageSerializationTest {
     private static final ObjectMapper JSON = new ObjectMapper();
     private static final XmlMapper XML = new XmlMapper();
 
-    private final MessageService messageService = new MessageServiceImpl();
+    private final MessageService messageService = new MessageServiceImpl(JSON);
 
     @Test
     void json_payload_parses_to_tree_and_queries_values() throws Exception {
@@ -44,7 +44,6 @@ class MessageSerializationTest {
 
         JsonNode root = XML.readTree(payload);
 
-        // XmlMapper exposes the root element's children at the top level (no synthetic "message" object).
         assertEquals("1.0", root.at("/header/version").asText());
         assertEquals("2026-04-16T12:00:00Z", root.at("/header/timestamp").asText());
         assertEquals("sender", root.at("/header/sender").asText());

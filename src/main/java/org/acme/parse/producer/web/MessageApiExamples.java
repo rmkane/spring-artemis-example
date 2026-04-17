@@ -1,4 +1,4 @@
-package org.acme.parse.web;
+package org.acme.parse.producer.web;
 
 /**
  * Example payloads for OpenAPI / Swagger UI (Try it out).

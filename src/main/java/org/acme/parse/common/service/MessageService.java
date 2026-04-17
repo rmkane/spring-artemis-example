@@ -1,6 +1,6 @@
-package org.acme.parse.service;
+package org.acme.parse.common.service;
 
-import org.acme.parse.model.Message;
+import org.acme.parse.common.model.Message;
 
 public interface MessageService {
 

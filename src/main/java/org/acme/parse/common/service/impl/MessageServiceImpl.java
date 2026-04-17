@@ -1,11 +1,9 @@
-package org.acme.parse.service.impl;
+package org.acme.parse.common.service.impl;
 
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,19 +12,20 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
+import lombok.extern.slf4j.Slf4j;
 
-import org.acme.parse.model.Message;
-import org.acme.parse.service.MessageService;
+import org.acme.parse.common.model.Message;
+import org.acme.parse.common.service.MessageService;
 
 @Service
+@Slf4j
 public class MessageServiceImpl implements MessageService {
 
-    private static final Logger log = LoggerFactory.getLogger(MessageServiceImpl.class);
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
     private final JAXBContext jaxbContext;
 
-    public MessageServiceImpl() {
+    public MessageServiceImpl(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
         try {
             this.jaxbContext = JAXBContext.newInstance(Message.class);
         } catch (JAXBException e) {
@@ -62,9 +61,6 @@ public class MessageServiceImpl implements MessageService {
         }
     }
 
-    /**
-     * UTF-8 bytes suitable for {@code jakarta.jms.BytesMessage}.
-     */
     @Override
     public byte[] serializeToXmlUtf8(Message message) {
         return serializeToXml(message).getBytes(StandardCharsets.UTF_8);

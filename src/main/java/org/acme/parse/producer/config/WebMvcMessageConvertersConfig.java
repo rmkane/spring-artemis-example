@@ -1,4 +1,4 @@
-package org.acme.parse.config;
+package org.acme.parse.producer.config;
 
 import java.util.List;
 
