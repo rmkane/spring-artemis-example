@@ -1,4 +1,4 @@
-package org.acme.parse.jms.consumer.web;
+package org.acme.parse.apps.consumerjson.web;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,17 +8,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 
-import lombok.RequiredArgsConstructor;
-
-import org.acme.parse.jms.consumer.lifecycle.JmsConsumerLifecycleService;
+import org.acme.parse.apps.consumerjson.service.ConsumerJsonLifecycleService;
 import org.acme.parse.jms.consumer.lifecycle.JmsConsumerListenerState;
+import org.acme.parse.jms.consumer.web.JmsListenerIdParameter;
 
 @RestController
 @RequestMapping("/api/jms/consume")
-@RequiredArgsConstructor
 public class JmsConsumerController {
 
-    private final JmsConsumerLifecycleService consumerLifecycleService;
+    private final ConsumerJsonLifecycleService consumerLifecycleService;
+
+    public JmsConsumerController(ConsumerJsonLifecycleService consumerLifecycleService) {
+        this.consumerLifecycleService = consumerLifecycleService;
+    }
 
     @Operation(
             summary = "Pause a JMS listener (stop receiving)",

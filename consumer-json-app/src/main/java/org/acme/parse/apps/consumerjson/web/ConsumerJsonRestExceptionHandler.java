@@ -1,4 +1,4 @@
-package org.acme.parse.common.web;
+package org.acme.parse.apps.consumerjson.web;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.acme.parse.jms.consumer.lifecycle.JmsListenerNotFoundException;
 
 @RestControllerAdvice
-public class GlobalRestExceptionHandler {
+public class ConsumerJsonRestExceptionHandler {
 
     @ExceptionHandler(JmsListenerNotFoundException.class)
     public ProblemDetail jmsListenerNotFound(JmsListenerNotFoundException ex) {

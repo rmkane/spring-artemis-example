@@ -1,4 +1,4 @@
-package org.acme.parse.jms.publish.web;
+package org.acme.parse.apps.producerjson.web;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,18 +9,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.swagger.v3.oas.annotations.Operation;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.acme.parse.jms.publish.service.JmsDemoPublishResult;
 
 /** Dedicated endpoints to publish plain text to each JMS pattern demo destination (see README). */
 @RestController
 @RequestMapping("/api/jms/publish/demo")
-@Slf4j
 public class JmsDemoPublishController {
+
+    private static final Logger log = LoggerFactory.getLogger(JmsDemoPublishController.class);
 
     private final JmsTemplate topicJmsTemplate;
     private final JmsTemplate queueJmsTemplate;
@@ -62,6 +63,7 @@ public class JmsDemoPublishController {
     public ResponseEntity<JmsDemoPublishResult> publishDurableTopic(@RequestBody String body) {
         topicJmsTemplate.convertAndSend(demoDurableTopic, body);
         log.info("Published demo durable topic destination={} chars={}", demoDurableTopic, body.length());
-        return ResponseEntity.accepted().body(new JmsDemoPublishResult("durable-topic", demoDurableTopic, body.length()));
+        return ResponseEntity.accepted()
+                .body(new JmsDemoPublishResult("durable-topic", demoDurableTopic, body.length()));
     }
 }

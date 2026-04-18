@@ -1,5 +1,6 @@
 package org.acme.parse.common.boot;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.boot.web.context.WebServerInitializedEvent;
@@ -39,7 +40,7 @@ public class WebServerStartupLogger implements ApplicationListener<WebServerInit
     }
 
     private static String displayHost(String bindAddress) {
-        if (bindAddress == null || "0.0.0.0".equals(bindAddress) || "::".equals(bindAddress)) {
+        if (bindAddress == null || Objects.equals(bindAddress, "0.0.0.0") || Objects.equals(bindAddress, "::")) {
             return "localhost";
         }
         return bindAddress;

@@ -1,26 +1,27 @@
-package org.acme.parse.jms.publish.service.impl;
+package org.acme.parse.apps.producerjson.service.impl;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import lombok.extern.slf4j.Slf4j;
-
+import org.acme.parse.apps.producerjson.service.ProducerJsonPublishService;
 import org.acme.parse.common.model.Message;
 import org.acme.parse.common.service.MessageSerializationService;
 import org.acme.parse.jms.publish.service.JmsPublishResult;
-import org.acme.parse.jms.publish.service.JmsPublishService;
 import org.acme.parse.jms.publish.service.JmsWireFormat;
 
 @Service
-@Slf4j
-public class JmsPublishServiceImpl implements JmsPublishService {
+public class ProducerJsonPublishServiceImpl implements ProducerJsonPublishService {
+
+    private static final Logger log = LoggerFactory.getLogger(ProducerJsonPublishServiceImpl.class);
 
     private final JmsTemplate jmsTemplate;
     private final MessageSerializationService messageSerializationService;
     private final String topicName;
 
-    public JmsPublishServiceImpl(
+    public ProducerJsonPublishServiceImpl(
             JmsTemplate jmsTemplate,
             MessageSerializationService messageSerializationService,
             @Value("${app.jms.topic}") String topicName) {

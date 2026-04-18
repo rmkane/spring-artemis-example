@@ -1,8 +1,6 @@
-package org.acme.parse.common.web;
+package org.acme.parse.apps.producerxml.web;
 
 import io.swagger.v3.oas.annotations.Hidden;
-
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
@@ -11,16 +9,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.HtmlUtils;
 
-/**
- * Serves a small HTML home page at {@code /} so the root URL is not a white-label error. Uses
- * {@code spring.application.name} in the header so each Boot app is identifiable.
- */
 @Hidden
 @Controller
-@RequiredArgsConstructor
 public class HomeController {
 
     private final Environment environment;
+
+    public HomeController(Environment environment) {
+        this.environment = environment;
+    }
 
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
     @ResponseBody

@@ -1,4 +1,4 @@
-package org.acme.parse.jms.consumer.lifecycle;
+package org.acme.parse.apps.consumerxml.service.impl;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.config.JmsListenerEndpointRegistry;
@@ -6,17 +6,22 @@ import org.springframework.jms.listener.MessageListenerContainer;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import lombok.extern.slf4j.Slf4j;
+import org.acme.parse.apps.consumerxml.service.ConsumerXmlLifecycleService;
+import org.acme.parse.jms.consumer.lifecycle.JmsConsumerListenerState;
+import org.acme.parse.jms.consumer.lifecycle.JmsListenerNotFoundException;
 
 @Service
-@Slf4j
-public class JmsConsumerLifecycleServiceImpl implements JmsConsumerLifecycleService {
+public class ConsumerXmlLifecycleServiceImpl implements ConsumerXmlLifecycleService {
+
+    private static final Logger log = LoggerFactory.getLogger(ConsumerXmlLifecycleServiceImpl.class);
 
     private final JmsListenerEndpointRegistry listenerEndpointRegistry;
     private final String listenerId;
 
-    public JmsConsumerLifecycleServiceImpl(
+    public ConsumerXmlLifecycleServiceImpl(
             JmsListenerEndpointRegistry listenerEndpointRegistry,
             @Value("${app.jms.listener-id}") String listenerId) {
         this.listenerEndpointRegistry = listenerEndpointRegistry;
@@ -26,27 +31,27 @@ public class JmsConsumerLifecycleServiceImpl implements JmsConsumerLifecycleServ
     @Override
     public JmsConsumerListenerState pause(@Nullable String listenerIdParam) {
         String id = resolveListenerId(listenerIdParam);
-        MessageListenerContainer c = requireContainer(id);
-        if (c.isRunning()) {
-            c.stop();
+        MessageListenerContainer container = requireContainer(id);
+        if (container.isRunning()) {
+            container.stop();
             log.info("Paused JMS listener id={}", id);
         } else {
             log.info("JMS listener id={} was already paused (not running)", id);
         }
-        return new JmsConsumerListenerState(id, c.isRunning());
+        return new JmsConsumerListenerState(id, container.isRunning());
     }
 
     @Override
     public JmsConsumerListenerState resume(@Nullable String listenerIdParam) {
         String id = resolveListenerId(listenerIdParam);
-        MessageListenerContainer c = requireContainer(id);
-        if (!c.isRunning()) {
-            c.start();
+        MessageListenerContainer container = requireContainer(id);
+        if (!container.isRunning()) {
+            container.start();
             log.info("Resumed JMS listener id={}", id);
         } else {
             log.info("JMS listener id={} was already running", id);
         }
-        return new JmsConsumerListenerState(id, c.isRunning());
+        return new JmsConsumerListenerState(id, container.isRunning());
     }
 
     private String resolveListenerId(@Nullable String listenerIdParam) {
@@ -54,10 +59,10 @@ public class JmsConsumerLifecycleServiceImpl implements JmsConsumerLifecycleServ
     }
 
     private MessageListenerContainer requireContainer(String id) {
-        MessageListenerContainer c = listenerEndpointRegistry.getListenerContainer(id);
-        if (c == null) {
+        MessageListenerContainer container = listenerEndpointRegistry.getListenerContainer(id);
+        if (container == null) {
             throw new JmsListenerNotFoundException(id);
         }
-        return c;
+        return container;
     }
 }

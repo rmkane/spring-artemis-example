@@ -1,4 +1,4 @@
-package org.acme.parse.jms.publish.web;
+package org.acme.parse.apps.producerjson.web;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,19 +13,21 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import lombok.RequiredArgsConstructor;
-
+import org.acme.parse.apps.producerjson.service.ProducerJsonPublishService;
 import org.acme.parse.common.model.Message;
 import org.acme.parse.jms.publish.service.JmsPublishResult;
-import org.acme.parse.jms.publish.service.JmsPublishService;
 import org.acme.parse.jms.publish.service.JmsWireFormat;
+import org.acme.parse.jms.publish.web.MessageApiExamples;
 
 @RestController
 @RequestMapping("/api/jms/publish")
-@RequiredArgsConstructor
 public class JmsPublishController {
 
-    private final JmsPublishService jmsPublishService;
+    private final ProducerJsonPublishService publishService;
+
+    public JmsPublishController(ProducerJsonPublishService publishService) {
+        this.publishService = publishService;
+    }
 
     @Operation(summary = "Publish a message to the JMS topic (TextMessage)")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -65,6 +67,6 @@ public class JmsPublishController {
             @RequestBody Message message,
             @RequestParam(name = "format", defaultValue = "json") JmsWireFormat format) {
 
-        return ResponseEntity.accepted().body(jmsPublishService.publish(message, format));
+        return ResponseEntity.accepted().body(publishService.publish(message, format));
     }
 }

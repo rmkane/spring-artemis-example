@@ -6,7 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(
         scanBasePackages = {
             "org.acme.parse.common",
-            "org.acme.parse.jms.publish"
+            "org.acme.parse.jms.publish",
+            "org.acme.parse.apps.producerjson"
         })
 public class ProducerJsonApplication {
 
